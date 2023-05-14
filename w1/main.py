@@ -44,9 +44,21 @@ def revenue_per_region(dp: DataProcessor) -> Dict:
     }
     """
     ######################################## YOUR CODE HERE ##################################################
-
+    # generator
+    data_reader_gen = (row for row in dp.data_reader)
+    # skips header
+    _ = next(data_reader_gen)
+    # creates dictionary to store values
+    revenue_by_region = {} 
+    for row in data_reader_gen:
+        region = row['Country']
+        total_revenue = dp.to_float(row['TotalPrice'])
+        if region in revenue_by_region:
+            revenue_by_region[region]+= total_revenue
+        else:
+            revenue_by_region[region] = total_revenue        
+    return revenue_by_region
     ######################################## YOUR CODE HERE ##################################################
-
 
 def get_sales_information(file_path: str) -> Dict:
     # Initialize
@@ -61,7 +73,6 @@ def get_sales_information(file_path: str) -> Dict:
         'revenue_per_region': revenue_per_region(dp),
         'file_name': get_file_name(file_path)
     }
-
 
 def main():
     parser = argparse.ArgumentParser(description="Choose from one of these : [tst|sml|bg]")

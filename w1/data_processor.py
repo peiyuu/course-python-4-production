@@ -6,6 +6,7 @@ import os
 
 
 class DataProcessor:
+    # initalize function
     def __init__(self, file_path: str) -> None:
         self._fp = file_path
         self._col_names = []
@@ -18,6 +19,7 @@ class DataProcessor:
         self.data_reader = DataReader(fp=file_path, sep=self._sep, col_names=self._col_names)
         self._set_n_rows()
 
+    # convert to float
     @staticmethod
     def to_float(val):
         try:
@@ -29,6 +31,7 @@ class DataProcessor:
         # get generator from data_reader
         data_reader_gen = (row for row in self.data_reader)
 
+        # create a variable to get the next line item
         _ = next(data_reader_gen)
 
         for _ in tqdm(data_reader_gen):
@@ -62,6 +65,7 @@ class DataProcessor:
             pprint(value.get_stats())
 
     def aggregate(self, column_name: str) -> float:
+        # for column_name = total price, add value
         """
         Input : List[str]
         Output : Dict
@@ -79,5 +83,15 @@ class DataProcessor:
         aggregate should be 105.58
         """
         ######################################## YOUR CODE HERE ##################################################
-
+         # generator
+        data_reader_gen = (row for row in self.data_reader)
+        # skips header
+        _ = next(data_reader_gen)
+        # aggregate
+        total = 0 
+        for row in tqdm(data_reader_gen):
+            value = self.to_float(row[column_name])
+            total += value
+        return total
         ######################################## YOUR CODE HERE ##################################################
+     
